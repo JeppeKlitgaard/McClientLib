@@ -1,7 +1,5 @@
 from Exceptions import HandlerError, ConnectionClosed
 
-FIXME = "FIXME"
-
 
 class BaseReceiver(object):
     """Base class for Receivers."""
@@ -41,7 +39,7 @@ class Receiver(BaseReceiver):
         game_mode = self.connection.read_byte()
         dimension = self.connection.read_byte()
         difficulty = self.connection.read_byte()
-        self.connection.read_byte()  # Unused
+        self.connection.read(1)  # Unused
         max_players = self.connection.read_byte()
         toReturn = {'EID': EID,
                     'level_type': level_type,
@@ -70,7 +68,7 @@ class Receiver(BaseReceiver):
     def handle05(self):
         EID = self.connection.read_int()
         slot = self.connection.read_short()
-        item = FIXME
+        item = self.connection.read_slot()
         toReturn = {"EID": EID,
                     "slot": slot,
                     "item": item}
@@ -165,7 +163,7 @@ class Receiver(BaseReceiver):
         yaw = self.connection.read_byte()  # Wiki says byte, not float
         pitch = self.connection.read_byte()  # Changed it
         held_item = self.connection.read_short()
-        metadata = FIXME
+        metadata = self.connection.read_metadata()
         toReturn = {'EID': EID,
                     'player_name': player_name,
                     'x': x,
@@ -195,28 +193,18 @@ class Receiver(BaseReceiver):
         z = self.connection.read_int()
         pitch = self.connection.read_byte()
         yaw = self.connection.read_byte()
-        ThrowerEntityID = self.connection.read_int()
-        if(ThrowerEntityID > 0):  #TODO Object data reader. also fix this.
-            SpeedX = self.connection.read_short()
-            SpeedY = self.connection.read_short()
-            SpeedZ = self.connection.read_short()
-            toReturn = {"entityID": EntityID,
-                        "type": Type,
-                        "x": x,
-                        "y": y,
-                        "z": z,
-                        "throwerEntityID": ThrowerEntityID,
-                        "speedX": SpeedX,
-                        "speedY": SpeedY,
-                        "speedZ": SpeedZ}
-            return toReturn
-        else:
-            toReturn = {"entityID": EntityID,
-                        "type": Type,
-                        "x": x,
-                        "y": y,
-                        "z": z}
-            return toReturn
+        object_data = self.connection.read_object_data()
+
+        toReturn = {"EID": EID,
+                    "type": type,
+                    "x": x,
+                    "y": y,
+                    "z": z,
+                    "pitch": pitch,
+                    "yaw": yaw,
+                    "object_data": object_data}
+
+        return toReturn
 
     def handle18(self):
         EID = self.connection.read_int()
@@ -230,7 +218,7 @@ class Receiver(BaseReceiver):
         velocityX = self.connection.read_short()
         velocityY = self.connection.read_short()
         velocityZ = self.connection.read_short()
-        metadata = FIXME
+        metadata = self.connection.read_metadata()
 
         toReturn = {"EID": EID,
                     "type": type,
@@ -240,9 +228,9 @@ class Receiver(BaseReceiver):
                     "pitch": pitch,
                     "head_pitch": head_pitch,
                     "yaw": yaw,
-                    "velocityX": VelocityX,
-                    "velocityY": VelocityY,
-                    "velocityZ": VelocityZ,
+                    "velocityX": velocityX,
+                    "velocityY": velocityY,
+                    "velocityZ": velocityZ,
                     "metadata": metadata}
 
         return toReturn
@@ -288,13 +276,15 @@ class Receiver(BaseReceiver):
 
         return toReturn
 
-    def handle1D(self):  # TODO FIX LATER
-        EntityArrayLength = self.connection.read_byte()
-        Entities = []
-        for i in range(EntityArrayLength):
-            Entities.append(self.connection.read_int())
+    def handle1D(self):
+        entity_count = self.connection.read_byte()
 
-        toReturn = {"entities": Entities}
+        entities = []
+        for i in range(entity_count):
+            entities.append(self.connection.read_int())
+
+        toReturn = {"entities": entities}
+
         return toReturn
 
     def handle1E(self):
@@ -384,21 +374,21 @@ class Receiver(BaseReceiver):
 
     def handle28(self):
         EID = self.connection.read_int()
-        metadata = FIXME
+        metadata = self.connection.read_metadata()
         toReturn = {"EID": EID,
                     "metadata": metadata}
 
         return toReturn
 
-    def handle29(self):  # TODO Fix this later
-        EntityID = self.connection.read_int()
-        EffectID = self.connection.read_byte()
-        Amplifier = self.connection.read_byte()
-        Duration = self.connection.read_short()
-        toReturn = {"entityID": EntityID,
-                    "effectID": EffectID,
-                    "amplifier": Amplifier,
-                    "duration": Duration}
+    def handle29(self):
+        EID = self.connection.read_int()
+        effectID = self.connection.read_byte()
+        amplifier = self.connection.read_byte()
+        duration = self.connection.read_short()
+        toReturn = {"EID": EID,
+                    "effectID": effectID,
+                    "amplifier": amplifier,
+                    "duration": duration}
 
         return toReturn
 
@@ -420,32 +410,38 @@ class Receiver(BaseReceiver):
 
         return toReturn
 
-    def handle33(self):  # TODO Fix this bad boy!
-        X = self.connection.read_int()
-        Z = self.connection.read_int()
-        GroundUpContinous = self.connection.read_boolean()
-        PrimaryBitMap = self.connection.read_short()
-        AddBitMap = self.connection.read_short()
-        CompressedSize = self.connection.read_int()
-        self.data.readByteArray(CompressedSize)
-        #not going to be deflating and using this data until I know how to :3
-        toReturn = {"x": X,
-                    "z": Z}
+    def handle33(self):
+        x = self.connection.read_int()
+        z = self.connection.read_int()
+        ground_up_continous = self.connection.read_boolean()
+        primary_bitmap = self.connection.read_ushort()
+        add_bitmap = self.connection.read_ushort()
 
-        del GroundUpContinous, PrimaryBitMap, AddBitMap  # To make pylint happy
+        data_length = self.connection.read_int()
+        raw_data = self.connection.read(data_length)
+        #TODO ASD
+        #not going to be deflating and using this data until I know how to :3
+        toReturn = {"x": x,
+                    "z": z,
+                    "ground_up_continous": ground_up_continous,
+                    "primary_bitmap": primary_bitmap,
+                    "add_bitmap": add_bitmap,
+                    "raw_data": raw_data}
 
         return toReturn
 
-    def handle34(self):  # TODO Fix this one too!
-        ChunkX = self.connection.read_int()
-        ChunkZ = self.connection.read_int()
-        AffectedBlocks = self.connection.read_short()
-        DataSize = self.connection.read_int()
-        self.data.readByteArray(DataSize)
+    def handle34(self):
+        chunkX = self.connection.read_int()
+        chunkZ = self.connection.read_int()
+        affected_blocks = self.connection.read_short()
+
+        data_size = self.connection.read_int()
+        data = self.connection.read_bytearray(length=data_size)
         # not going to be using this until I know how to.
-        toReturn = {"chunkX": ChunkX,
-                    "chunkZ": ChunkZ,
-                    "affectedBlocks": AffectedBlocks}
+        toReturn = {"chunkX": chunkX,
+                    "chunkZ": chunkZ,
+                    "affected_blocks": affected_blocks,
+                    "data": data}
 
         return toReturn
 
@@ -495,20 +491,28 @@ class Receiver(BaseReceiver):
 
         return toReturn
 
-    def handle38(self):  # TODO Fix this.
-        #short - number of chunks
-        ChunkCount = self.connection.read_short()
+    def handle38(self):
+        chunk_count = self.connection.read_short()
 
-        #int - chunk data length
-        ChunkDataLength = self.connection.read_int()
-        self.data.readByteArray(ChunkDataLength)
-        # just gonna ignore this for now
+        chunk_data_length = self.connection.read_int()
+        skylight_sent = self.connection.read_boolean()
+        raw_data = self.connection.read_bytearray(chunk_data_length)
 
-        #metadata - ignoring this
-        for i in range(ChunkCount):
-            self.data.read(12)
+        metadata = []
+        for i in range(chunk_count):
+            chunkX = self.connection.read_int()
+            chunkZ = self.connection.read_int()
+            primary_bitmap = self.connection.read_ushort()
+            add_bitmap = self.connection.read_ushort()
+            metadata.append({"x": chunkX,
+                             "z": chunkZ,
+                             "primary_bitmap": primary_bitmap,
+                             "add_bitmap": add_bitmap})
 
-        toReturn = {"chunkCount": ChunkCount}
+        toReturn = {"chunk_count": chunk_count,
+                    "skylight_sent": skylight_sent,
+                    "raw_data": raw_data,
+                    "metadata": metadata}
 
         return toReturn
 
@@ -519,7 +523,7 @@ class Receiver(BaseReceiver):
         radius = self.connection.read_float()
         record_count = self.connection.read_int()
         affected_blocks = []
-        for i in range(RecordCount * 3):
+        for i in range(record_count):
             x = self.connection.read_byte()
             y = self.connection.read_byte()
             z = self.connection.read_byte()
@@ -540,7 +544,7 @@ class Receiver(BaseReceiver):
 
         return toReturn
 
-    def handle3D(self):  # TODO See data field on wiki
+    def handle3D(self):
         effectID = self.connection.read_int()
         x = self.connection.read_int()
         y = self.connection.read_byte()
@@ -638,26 +642,26 @@ class Receiver(BaseReceiver):
 
         return toReturn
 
-    def handle67(self):  # TODO Fix this
+    def handle67(self):
         windowID = self.connection.read_byte()
         slot = self.connection.read_short()
-        SlotData = FIXME
-        toReturn = {"windowID": WindowID,
-                    "slot": Slot,
-                    "slotData": SlotData}
+        slot_data = self.connection.read_slot()
+        toReturn = {"windowID": windowID,
+                    "slot": slot,
+                    "slotData": slot_data}
 
         return toReturn
 
-    def handle68(self):  # TODO Fix this
-        WindowID = self.connection.read_byte()
-        Count = self.connection.read_short()
-        Slots = []
-        for i in range(Count):
-            SlotData = FIXME
-            Slots.append(SlotData)
-        toReturn = {"windowID": WindowID,
-                    "count": Count,
-                    "slots": Slots}
+    def handle68(self):
+        windowID = self.connection.read_byte()
+        count = self.connection.read_short()
+        slots = []
+        for i in range(count):
+            slot_data = self.connection.read_slot()
+            slots.append(slot_data)
+        toReturn = {"windowID": windowID,
+                    "count": count,
+                    "slots": slots}
 
         return toReturn
 
@@ -681,11 +685,11 @@ class Receiver(BaseReceiver):
 
         return toReturn
 
-    def handle6B(self):  # TODO asd
-        Slot = self.connection.read_short()
-        ClickedItem = FIXME
-        toReturn = {"slot": Slot,
-                    "clickedItem": ClickedItem}
+    def handle6B(self):
+        slot = self.connection.read_short()
+        clicked_item = self.connection.read_slot()
+        toReturn = {"slot": slot,
+                    "clicked_item": clicked_item}
 
         return toReturn
 
@@ -710,39 +714,26 @@ class Receiver(BaseReceiver):
     def handle83(self):
         item_type = self.connection.read_short()
         itemID = self.connection.read_short()
-        text_length = self.connection.read_short()
-        text = self.data.readByteArray(TextLength)
+        text_data = self.connection.read_bytearray()
         #TODO Decode text?
         toReturn = {"item_type": item_type,
                     "itemID": itemID,
-                    "text": text}
+                    "text_data": text_data}
 
         return toReturn
 
-
     def handle84(self):
-        # TODO NBTData, no idea what it is used for
-        # Might be fun to explore this and document it on wiki.vg
-        X = self.connection.read_int()
-        Y = self.connection.read_short()
-        Z = self.connection.read_int()
-        Action = self.connection.read_byte()
-        DataLength = self.connection.read_short()
-        if (DataLength != -1):
-            NBTData = struct.unpack(str(DataLength) + "s",
-                                    self.data.read(DataLength))[0]
-            toReturn = {"x": X,
-                        "y": Y,
-                        "z": Z,
-                        "action": Action,
-                        "nbtData": NBTData}
+        x = self.connection.read_int()
+        y = self.connection.read_short()
+        z = self.connection.read_int()
+        action = self.connection.read_byte()
+        data = self.connection.read_nbtdata()
 
-            return toReturn
-
-        toReturn = {"x": X,
-                    "y": Y,
-                    "z": Z,
-                    "action": Action}
+        toReturn = {"x": x,
+                    "y": y,
+                    "z": z,
+                    "action": action,
+                    "data": data}
 
         return toReturn
 
@@ -786,7 +777,13 @@ class Receiver(BaseReceiver):
     def handleCE(self):
         name = self.connection.read_string()
         value = self.connection.read_string()
-        action = self.connection.read_byte()  # TODO Decode action
+        action = self.connection.read_byte()
+        if action == 0:
+            action = "create"
+        if action == 1:
+            action = "remove"
+        if action == 2:
+            action = "update"
 
         toReturn = {"name": name,
                     "value": value,
@@ -796,9 +793,18 @@ class Receiver(BaseReceiver):
 
     def handleCF(self):
         item_name = self.connection.read_string()
-        action = self.connection.read_byte()  # TODO Decode action
-        score_name = self.connection.read_string()
-        value = self.connection.read_int()
+        action = self.connection.read_byte()
+        score_name = None
+        value = None
+
+        if action != 1:
+            score_name = self.connection.read_string()
+            value = self.connection.read_int()
+
+        if action == 0:
+            action = "create"
+        if action == 1:
+            action = "remove"
 
         toReturn = {"item_name": item_name,
                     "action": action,
@@ -808,7 +814,14 @@ class Receiver(BaseReceiver):
         return toReturn
 
     def handleD0(self):
-        position = self.connection.read_byte()  # TODO Decode position
+        position = self.connection.read_byte()
+        if position = 0:
+            position = "list"
+        if position = 1:
+            position = "sidebar"
+        if position = 2:
+            position = "below_name"
+
         name = self.connection.read_string()
 
         toReturn = {"position": position,
@@ -816,19 +829,52 @@ class Receiver(BaseReceiver):
 
         return toReturn
 
-    def handleD1(self):  # TODO FIX LATER
+    def handleD1(self):
         team_name = self.connection.read_string()
-        mode = self.connection.read_byte()  # TODO Decode mode
-        team_display_name = self.connection.read_string()
-        team_prefix = self.connection.read_string()
-        team_suffix = self.connection.read_string()
-        friendly_fire = self.connection.read_boolean
+        mode = self.connection.read_byte()
 
-    def handleFA(self):  # TODO FIX LATER
+        team_display_name = None
+        team_prefix = None
+        team_suffix = None
+        friendly_fire = None
+        players = []
+
+        if mode == 0 or 2:
+            team_display_name = self.connection.read_string()
+            team_prefix = self.connection.read_string()
+            team_suffix = self.connection.read_string()
+            friendly_fire = self.connection.read_boolean()
+
+        if mode == 0 or 3 or 4:
+            player_count = self.read_short()
+            for i in range(player_count):
+                players.append(self.connection.read_string())
+
+        if mode == 0:
+            mode = "team_create"
+        if mode == 1:
+            mode = "team_remove"
+        if mode == 2:
+            mode = "team_update"
+        if mode == 3:
+            mode = "players_create"
+        if mode = 4:
+            mode = "players_remove"
+
+        toReturn = {"team_name": team_name,
+                    "mode": mode,
+                    "team_display_name": team_display_name,
+                    "team_prefix": team_prefix,
+                    "team_suffix": team_suffix,
+                    "friendly_fire": friendly_fire,
+                    "players": players}
+
+        return toReturn
+
+    def handleFA(self):
         channel = self.connection.read_string()
-        length = self.connection.read_short()
-        message = self.data.readByteArray(length)
-        toReturn = {"channel": Channel,
+        message = self.connection.read_bytearray()
+        toReturn = {"channel": channel,
                     "message": message}
 
         return toReturn

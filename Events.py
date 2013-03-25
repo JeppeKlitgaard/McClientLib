@@ -194,3 +194,4 @@ class EventManager(BaseEventManager):
 
         self["recvFD"].add_handler(self.connection.respondFD)
         self["recvFC"].add_handler(self.connection.respondFC)
+        self["recv00"].add_handler(self.connection.respond00)

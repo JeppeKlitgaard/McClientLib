@@ -21,3 +21,6 @@ class NetworkHelper(object):
             raise NetworkError("Server didn't respond with empty FC.")
         self.socket.encrypt(self.secret)
         self.sender.send_client_status(0)
+
+    def respond00(self, KID):
+        self.sender.send_keepalive(KID)

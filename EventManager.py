@@ -102,6 +102,8 @@ class EventManager(dict):
 
     def __setitem__(self, key, value):
         super(EventManager, self).__setitem__(key, value)
+        if key not in self[key].names:
+            self[key].add_name(key)
 
         if self[key].eventmanager is not self:
             self[key].eventmanager = self

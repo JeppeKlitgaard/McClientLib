@@ -1,8 +1,6 @@
 import struct
 from io import BytesIO
-#from nbt import NBTFile, TAG_Short, TAG_List, TAG_Compound
-#from McLib.data.Slot import Slot, SlotEnchant, SlotPotionEffect
-import struct
+from pynbt import NBTFile
 from Utils import hex2str
 
 
@@ -41,6 +39,9 @@ class TypeReader(object):
         data = self._unpack("short", self.read(2))
         return data
 
+    def read_ushort(self):
+        data = self._unpack("ushort", self.read(2))
+
     def read_string(self):
         length = self.read_short() * 2
         data = unicode(self.read(length), "utf-16be")
@@ -70,9 +71,82 @@ class TypeReader(object):
         data = self._unpack("double", self.read(8))
         return data
 
-    def read_bytearray(self):
-        length = self.read_short()
+    def read_bytearray(self, length=None):
+        if not length:
+            length = self.read_short()
         data = struct.unpack("!" + str(length) + "s", self.read(length))[0]
+        return data
+
+    def read_slot(self):
+        slot = Slot()
+        slot.blockID = self.read_short()
+        if slot.blockID != -1:
+            slot.count = self.read_byte()
+            slot.damage = self.read_short()
+
+            data_len = self.read_short()
+            if data_len != -1:
+                byte_array = self.read_bytearray(length=data_len)
+
+                slot.data = NBTFile(BytesIO(byte_array),
+                                    compression=NBTFile.Compression.GZIP)
+
+        return slot
+
+    def read_metadata(self):
+        metadata = {}
+        byte = self.read_ubyte()
+        while byte != 127:
+            index = byte & 0x1F  # Lower 5 bits
+            ty = byte >> 5  # Upper 3 bits
+
+            if ty == 0:
+                value = self.read_byte()
+            if ty == 1:
+                value = self.read_short()
+            if ty == 2:
+                value = self.read_int()
+            if ty == 3:
+                value = self.read_float()
+            if ty == 4:
+                value = self.read_string()
+            if ty == 5:
+                value = self.read_slot()
+            if ty == 6:
+                value = []
+                for i in range(3):
+                    value.append(self.read_int())
+            metadata[index] = (ty, value)
+            byte = self.read_ubyte()
+
+        return metadata
+
+    def read_nbtdata(self, compressed=True):
+        data = None
+
+        length = self.read_short()
+        if length != -1:
+            byte_array = self.read_bytearray(length=length)
+            if compressed:
+                data = NBTFile(BytesIO(byte_array),
+                               compression=NBTFile.Compression.GZIP)
+            else:
+                data = NBTFile(BytesIO(byte_array))
+
+        return data
+
+    def read_object_data(self):
+        data = {"data": None,
+                "speedX": None,
+                "speedY": None,
+                "speedZ": None}
+
+        data["data"] = self.read_int()
+        if data["data"] > 0:
+            data["speedX"] = self.read_short()
+            data["speedY"] = self.read_short()
+            data["speedZ"] = self.read_short()
+
         return data
 
 
@@ -90,6 +164,9 @@ class TypeWriter(object):
 
     def write_short(self, data):
         self.write(self._pack("short", data))
+
+    def write_ushort(self, data):
+        self.write(self._pack("ushort", data))
 
     def write_string(self, data):
         self.write_short(len(data))
@@ -116,6 +193,20 @@ class TypeWriter(object):
     def write_bytearray(self, data):
         self.write_short(len(data))
         self.write(struct.pack("!" + str(len(data)) + "s", data))
+
+
+class Slot(object):
+    def __init__(self, blockID=-1, count=0, damage=None, data=None):
+        self.blockID = blockID
+        self.count = count
+        self.damage = damage
+        self.data = data
+
+    def __repr__(self):
+        return "<Slot> ID: %s, count: %s, damage: %s, #%s#" % (self.blockID,
+                                                               self.count,
+                                                               self.damage,
+                                                               self.data)
 
 ####
 #data_types = {
