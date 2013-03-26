@@ -195,3 +195,9 @@ class EventManager(BaseEventManager):
         self["recvFD"].add_handler(self.connection.respondFD)
         self["recvFC"].add_handler(self.connection.respondFC)
         self["recv00"].add_handler(self.connection.respond00)
+
+    def __getattr__(self, name):
+        return dict.__getattr__(self, name)
+
+    def __setattr__(self, name, value):
+        return dict.__setattr__(self, name, value)

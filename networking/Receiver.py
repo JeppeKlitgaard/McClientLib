@@ -815,11 +815,11 @@ class Receiver(BaseReceiver):
 
     def handleD0(self):
         position = self.connection.read_byte()
-        if position = 0:
-            position = "list"
-        if position = 1:
+        if position == 0:
+            position == "list"
+        if position == 1:
             position = "sidebar"
-        if position = 2:
+        if position == 2:
             position = "below_name"
 
         name = self.connection.read_string()
@@ -858,7 +858,7 @@ class Receiver(BaseReceiver):
             mode = "team_update"
         if mode == 3:
             mode = "players_create"
-        if mode = 4:
+        if mode == 4:
             mode = "players_remove"
 
         toReturn = {"team_name": team_name,
