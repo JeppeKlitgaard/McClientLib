@@ -5,9 +5,7 @@ A MineCraft library written in, and for Python 2.7
 
 Protocols
 =====
-* 39 (1.3.2)
-* 47 (1.4.2)
-* 49 (1.4.4, 1.4.5)
+* 60 (1.5.0, 1.5.1)
 
 Examples:
 =====
@@ -18,6 +16,9 @@ Fun Facts:
 * You can read a book just by looking at someone holding it (They have to be within entity loading range, that's all)
 * You can see which enchants a person has on, as long as they are within entity loading range (Exploit for PvP?)
 * You can see how much air (Drowning) an entity has left, as long as they are within entity loading range
+* Server can decide volume of sound effects (can be over 100%)
+* Server can spawn as many particles as it wants to on clients (a lot!)
+* Server can decide window name for windows.
 
 Known Issues:
 =====
