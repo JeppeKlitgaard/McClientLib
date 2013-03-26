@@ -3,18 +3,25 @@ import urllib
 import urllib2
 
 
-class Session(object):
-    """Represents a connection between Minecraft.net login servers,
-    and our client."""
-    __LOGIN_URL = "https://login.minecraft.net"
-    __LOGIN_HEADER = {"Content-Type": "application/x-www-form-urlencoded"}
-    __JOIN_URL = "http://session.minecraft.net/game/joinserver.jsp"
-    VERSION = 13
-
+class BaseSession(object):
     game_version = None
     username = None
     sessionID = None
     UID = None
+
+    def connect(self, username, password):
+        raise NotImplementedError()
+
+    def joinserver(self, serverID):
+        raise NotImplementedError()
+
+
+class Session(BaseSession):
+    """Session object for connecting to online server."""
+    __LOGIN_URL = "https://login.minecraft.net"
+    __LOGIN_HEADER = {"Content-Type": "application/x-www-form-urlencoded"}
+    __JOIN_URL = "http://session.minecraft.net/game/joinserver.jsp"
+    VERSION = 13
 
     def connect(self, username, password):
         """Connects minecraft.net and gets a session id."""
@@ -56,3 +63,17 @@ class Session(object):
                                "response was: %s" % response)
 
         return True
+
+
+class OfflineSession(BaseSession):
+    """Session object for connecting to offline servers."""
+    def connect(self, username, password):
+        """Since this is offline mode, we don't need the password."""
+        self.username = username
+        self.sessionID = "-"
+
+    def joinserver(self, serverID):
+        """Since this is offline mode, we don't need the serverID."""
+        pass
+
+
