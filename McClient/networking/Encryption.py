@@ -84,3 +84,6 @@ class Socket(object):
 
     def send(self, *args, **kwargs):
         return self.socket.send(*args, **kwargs)
+
+    def close(self):
+        self.socket.close()

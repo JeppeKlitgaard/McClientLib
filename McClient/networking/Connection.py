@@ -19,9 +19,10 @@ class Connection(TypeReader, TypeWriter, Thread, NetworkHelper):
         self.port = None
 
         self.secret = None
+        self.killed = False
 
     def run(self, *args, **kwargs):
-        self.connect(*args, **kwargs)
+        self.loop()
 
     def connect(self, host, port):
         """Connects to the given server."""
@@ -32,10 +33,10 @@ class Connection(TypeReader, TypeWriter, Thread, NetworkHelper):
         self.socket.connect(self.host, self.port)
         ### LOGIN ###
         self.sender.send_handshake()  # Send handshake(0x02)
-        self.loop()
+        self.start()
 
     def loop(self):
-        while True:
+        while not self.killed:
             self.socket.wait4data()
             self.receiver.data_received()
 
@@ -44,3 +45,12 @@ class Connection(TypeReader, TypeWriter, Thread, NetworkHelper):
 
     def write(self, *args, **kwargs):
         return self.socket.send(*args, **kwargs)
+
+    def disconnect(self, reason="Connection closed.", timeout=10, force=False):
+        if force:
+            self.socket.close()
+        else:
+            self.killed = True
+            self.join(timeout)
+            self.sender.send_disconnect(reason)
+            self.socket.close()
