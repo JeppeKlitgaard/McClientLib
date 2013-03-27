@@ -29,6 +29,8 @@ class Sender(BaseSender):
 
     def send_chat_message(self, message):
         self.write_id("\x03")
+        if not message:
+            raise TypeError("'message' must be string of atleast 1 character")
         self.connection.write_string(message)
 
     def send_use_entity(self, EID, targetID, button):
