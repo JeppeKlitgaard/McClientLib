@@ -1,5 +1,5 @@
 from EventManager import EventManager, Event
-import weakref.ref
+import weakref
 
 
 class Ref(weakref.ref):
