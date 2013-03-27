@@ -1,190 +1,199 @@
 from EventManager import EventManager, Event
+import weakref.ref
 
 
-def e(*names):
-    event = Event()
-    for name in names:
-        event.add_name(name)
-
-    return event
+class Ref(weakref.ref):
+    def __getattribute__(self, name):
+        return self().__getattribute__(name)
 
 
 class BaseEventManager(EventManager):
+    def set_event(self, name, *aliases):
+        self[name] = Event()
+        for alias in aliases:
+            self.aliases[alias] = Ref(self[name])
+
     def __init__(self):
         super(BaseEventManager, self).__init__()
+        self.aliases = {}
 
-        self["recv00"] = e("recv_keepalive")
-        self["sent00"] = e("sent_keepalive")
+        self.set_event("recv00", "recv_keepalive")
+        self.set_event("sent00", "sent_keepalive")
 
-        self["recv01"] = e("recv_login_request")
+        self.set_event("recv01", "recv_login_request")
 
-        self["sent02"] = e("sent_handshake")
+        self.set_event("sent02", "sent_handshake")
 
-        self["recv03"] = e("recv_chat_message")
-        self["sent03"] = e("sent_chat_message")
+        self.set_event("recv03", "recv_chat_message")
+        self.set_event("sent03", "sent_chat_message")
 
-        self["recv04"] = e("recv_time_update")
+        self.set_event("recv04", "recv_time_update")
 
-        self["recv05"] = e("recv_entity_equipment")
+        self.set_event("recv05", "recv_entity_equipment")
 
-        self["recv06"] = e("recv_spawn_position")
+        self.set_event("recv06", "recv_spawn_position")
 
-        self["sent07"] = e("sent_use_entity")
+        self.set_event("sent07", "sent_use_entity")
 
-        self["recv08"] = e("recv_update_health")
+        self.set_event("recv08", "recv_update_health")
 
-        self["recv09"] = e("recv_respawn")
+        self.set_event("recv09", "recv_respawn")
 
-        self["recv0A"] = e("recv_player")
+        self.set_event("recv0A", "recv_player")
 
-        self["sent0B"] = e("sent_player_position")
+        self.set_event("sent0B", "sent_player_position")
 
-        self["sent0C"] = e("sent_player_look")
+        self.set_event("sent0C", "sent_player_look")
 
-        self["recv0D"] = e("recv_player_position_and_look")
-        self["sent0D"] = e("sent_player_position_and_look")
+        self.set_event("recv0D", "recv_player_position_and_look")
+        self.set_event("sent0D", "sent_player_position_and_look")
 
-        self["sent0E"] = e("sent_player_digging")
+        self.set_event("sent0E", "sent_player_digging")
 
-        self["sent0F"] = e("sent_player_block_placement")
+        self.set_event("sent0F", "sent_player_block_placement")
 
-        self["recv10"] = e("recv_held_item_change")
-        self["sent10"] = e("sent_held_item_change")
+        self.set_event("recv10", "recv_held_item_change")
+        self.set_event("sent10", "sent_held_item_change")
 
-        self["recv11"] = e("recv_use_bed")
+        self.set_event("recv11", "recv_use_bed")
 
-        self["recv12"] = e("recv_animation")
-        self["sent12"] = e("sent_animation")
+        self.set_event("recv12", "recv_animation")
+        self.set_event("sent12", "sent_animation")
 
-        self["sent13"] = e("sent_entity_action")
+        self.set_event("sent13", "sent_entity_action")
 
-        self["recv14"] = e("recv_spawn_named_entity")
+        self.set_event("recv14", "recv_spawn_named_entity")
 
-        self["recv16"] = e("recv_collect_item")
+        self.set_event("recv16", "recv_collect_item")
 
-        self["recv17"] = e("recv_spawn_object")
+        self.set_event("recv17", "recv_spawn_object")
 
-        self["recv18"] = e("recv_spawn_mob")
+        self.set_event("recv18", "recv_spawn_mob")
 
-        self["recv19"] = e("recv_spawn_painting")
+        self.set_event("recv19", "recv_spawn_painting")
 
-        self["recv1A"] = e("recv_spawn_exp_orb")
+        self.set_event("recv1A", "recv_spawn_exp_orb")
 
-        self["recv1C"] = e("recv_entity_velocity")
+        self.set_event("recv1C", "recv_entity_velocity")
 
-        self["recv1D"] = e("recv_destroy_entity")
+        self.set_event("recv1D", "recv_destroy_entity")
 
-        self["recv1E"] = e("recv_entity")
+        self.set_event("recv1E", "recv_entity")
 
-        self["recv1F"] = e("recv_entity_relative_move")
+        self.set_event("recv1F", "recv_entity_relative_move")
 
-        self["recv20"] = e("recv_entity_look")
+        self.set_event("recv20", "recv_entity_look")
 
-        self["recv21"] = e("recv_entity_look_and_relative_move")
+        self.set_event("recv21", "recv_entity_look_and_relative_move")
 
-        self["recv22"] = e("recv_entity_teleport")
+        self.set_event("recv22", "recv_entity_teleport")
 
-        self["recv23"] = e("recv_entity_head_look")
+        self.set_event("recv23", "recv_entity_head_look")
 
-        self["recv26"] = e("recv_entity_status")
+        self.set_event("recv26", "recv_entity_status")
 
-        self["recv27"] = e("recv_attach_entity")
+        self.set_event("recv27", "recv_attach_entity")
 
-        self["recv28"] = e("recv_entity_metadata")
+        self.set_event("recv28", "recv_entity_metadata")
 
-        self["recv29"] = e("recv_entity_effect")
+        self.set_event("recv29", "recv_entity_effect")
 
-        self["recv2A"] = e("recv_remove_entity_effect")
+        self.set_event("recv2A", "recv_remove_entity_effect")
 
-        self["recv2B"] = e("recv_set_exp")
+        self.set_event("recv2B", "recv_set_exp")
 
-        self["recv33"] = e("recv_chunk_data")
+        self.set_event("recv33", "recv_chunk_data")
 
-        self["recv34"] = e("recv_multi_block_change")
+        self.set_event("recv34", "recv_multi_block_change")
 
-        self["recv35"] = e("recv_block_change")
+        self.set_event("recv35", "recv_block_change")
 
-        self["recv36"] = e("recv_block_action")
+        self.set_event("recv36", "recv_block_action")
 
-        self["recv37"] = e("recv_block_break_animation")
+        self.set_event("recv37", "recv_block_break_animation")
 
-        self["recv38"] = e("recv_map_chunk_bulk")
+        self.set_event("recv38", "recv_map_chunk_bulk")
 
-        self["recv3C"] = e("recv_explosion")
+        self.set_event("recv3C", "recv_explosion")
 
-        self["recv3D"] = e("recv_sound_or_particle_effect")
+        self.set_event("recv3D", "recv_sound_or_particle_effect")
 
-        self["recv3E"] = e("recv_named_sound_effect")
+        self.set_event("recv3E", "recv_named_sound_effect")
 
-        self["recv3F"] = e("recv_particle")
+        self.set_event("recv3F", "recv_particle")
 
-        self["recv46"] = e("recv_change_game_state")
+        self.set_event("recv46", "recv_change_game_state")
 
-        self["recv47"] = e("recv_spawn_global_entity")
+        self.set_event("recv47", "recv_spawn_global_entity")
 
-        self["recv64"] = e("recv_open_window")
+        self.set_event("recv64", "recv_open_window")
 
-        self["recv65"] = e("recv_close_window")
-        self["sent65"] = e("sent_close_window")
+        self.set_event("recv65", "recv_close_window")
+        self.set_event("sent65", "sent_close_window")
 
-        self["sent66"] = e("sent_click_window")
+        self.set_event("sent66", "sent_click_window")
 
-        self["recv67"] = e("recv_set_slot")
+        self.set_event("recv67", "recv_set_slot")
 
-        self["recv68"] = e("recv_set_window_items")
+        self.set_event("recv68", "recv_set_window_items")
 
-        self["recv69"] = e("recv_update_window_property")
+        self.set_event("recv69", "recv_update_window_property")
 
-        self["recv6A"] = e("recv_confirm_transaction")
-        self["sent6A"] = e("sent_confirm_transaction")
+        self.set_event("recv6A", "recv_confirm_transaction")
+        self.set_event("sent6A", "sent_confirm_transaction")
 
-        self["recv6B"] = e("recv_creative_inventory_action")
-        self["sent6B"] = e("sent_creative_inventory_action")
+        self.set_event("recv6B", "recv_creative_inventory_action")
+        self.set_event("sent6B", "sent_creative_inventory_action")
 
-        self["sent6C"] = e("sent_enchant_item")
+        self.set_event("sent6C", "sent_enchant_item")
 
-        self["recv82"] = e("recv_update_sign")
-        self["sent82"] = e("sent_update_sign")
+        self.set_event("recv82", "recv_update_sign")
+        self.set_event("sent82", "sent_update_sign")
 
-        self["recv83"] = e("recv_item_data")
+        self.set_event("recv83", "recv_item_data")
 
-        self["recv84"] = e("recv_update_tile_entity")
+        self.set_event("recv84", "recv_update_tile_entity")
 
-        self["recvC8"] = e("recv_increment_statistic")
+        self.set_event("recvC8", "recv_increment_statistic")
 
-        self["recvC9"] = e("recv_player_list_item")
+        self.set_event("recvC9", "recv_player_list_item")
 
-        self["recvCA"] = e("recv_player_abilities")
-        self["sentCA"] = e("sent_player_abilities")
+        self.set_event("recvCA", "recv_player_abilities")
+        self.set_event("sentCA", "sent_player_abilities")
 
-        self["recvCB"] = e("recv_tab_complete")
-        self["sentCB"] = e("sent_tab_complete")
+        self.set_event("recvCB", "recv_tab_complete")
+        self.set_event("sentCB", "sent_tab_complete")
 
-        self["sentCC"] = e("sent_client_settings")
+        self.set_event("sentCC", "sent_client_settings")
 
-        self["sentCD"] = e("sent_client_statuses")
+        self.set_event("sentCD", "sent_client_statuses")
 
-        self["recvCE"] = e("recv_scoreboard_objective")
+        self.set_event("recvCE", "recv_scoreboard_objective")
 
-        self["recvCF"] = e("recv_update_score")
+        self.set_event("recvCF", "recv_update_score")
 
-        self["recvD0"] = e("recv_display_scoreboard")
+        self.set_event("recvD0", "recv_display_scoreboard")
 
-        self["recvD1"] = e("recv_teams")
+        self.set_event("recvD1", "recv_teams")
 
-        self["recvFA"] = e("recv_plugin_message")
+        self.set_event("recvFA", "recv_plugin_message")
+        self.set_event("sentFA", "sent_plugin_message")
 
-        self["sentFA"] = e("sent_plugin_message")
+        self.set_event("recvFC", "recv_encryption_key_response")
+        self.set_event("sentFC", "sent_encryption_key_response")
 
-        self["recvFC"] = e("recv_encryption_key_response")
-        self["sentFC"] = e("sent_encryption_key_response")
+        self.set_event("recvFD", "recv_encryption_key_request")
 
-        self["recvFD"] = e("recv_encryption_key_request")
+        self.set_event("sentFE", "recv_client_list_ping")
 
-        self["sentFE"] = e("recv_client_list_ping")
+        self.set_event("recvFF", "recv_client_disconnect")
+        self.set_event("sentFF", "sent_client_disconnect")
 
-        self["recvFF"] = e("recv_client_disconnect")
-        self["sentFF"] = e("sent_client_disconnect")
+    def __getitem__(self, key):
+        try:
+            return super(BaseEventManager, self).__getitem__(key)
+        except KeyError:
+            return self.aliases[key]
 
 
 class EventManager(BaseEventManager):
@@ -195,9 +204,3 @@ class EventManager(BaseEventManager):
         self["recvFD"].add_handler(self.connection.respondFD)
         self["recvFC"].add_handler(self.connection.respondFC)
         self["recv00"].add_handler(self.connection.respond00)
-
-    def __getattr__(self, name):
-        return dict.__getattr__(self, name)
-
-    def __setattr__(self, name, value):
-        return dict.__setattr__(self, name, value)

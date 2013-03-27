@@ -9,22 +9,25 @@ class Connection(TypeReader, TypeWriter, Thread, NetworkHelper):
     socket = None
     socket_file = None
 
-    def __init__(self, session, eventmanager, receiver, sender,
-                 host, port=25565):
+    def __init__(self, session, eventmanager, receiver, sender):
+        Thread.__init__(self)
         self.session = session
         self.eventmanager = eventmanager(self)
         self.receiver = receiver(self)
         self.sender = sender(self)
+        self.host = None
+        self.port = None
+
+        self.secret = None
+
+    def run(self, *args, **kwargs):
+        self.connect(*args, **kwargs)
+
+    def connect(self, host, port):
+        """Connects to the given server."""
         self.host = host
         self.port = port
 
-        secret = None
-
-    def run(self):
-        self.connect()
-
-    def connect(self):
-        """Connects to the given server."""
         self.socket = Socket()
         self.socket.connect(self.host, self.port)
         ### LOGIN ###
