@@ -201,6 +201,22 @@ class EventManager(BaseEventManager):
         self.connection = connection
         super(EventManager, self).__init__(*args, **kwargs)
 
+        self.recv_packet = Event()
+        self.recv_packet.name = "RECV"
+        self.recv_packet.eventmanager = None
+
+        self.sent_packet = Event()
+        self.sent_packet.name = "SENT"
+        self.sent_packet.eventmanager = None
+
+        self.got_event.add_handler(self.handle_global)
+
         self["recvFD"].add_handler(self.connection.respondFD)
         self["recvFC"].add_handler(self.connection.respondFC)
         self["recv00"].add_handler(self.connection.respond00)
+
+    def handle_global(self, name, *args, **kwargs):
+        if "recv" in name:
+            self.recv_packet(name, *args, **kwargs)
+        if "sent" in name:
+            self.sent_packet(name, *args, **kwargs)
