@@ -1,3 +1,13 @@
+__all__ = (
+    "HandlerError",
+    "SessionError",
+    "SessionBadLogin",
+    "SessionVersionError",
+    "NetworkError",
+    "ConnectionClosed"
+)
+
+
 class HandlerError(Exception):
     pass
 
