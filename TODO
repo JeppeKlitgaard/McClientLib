@@ -2,3 +2,4 @@ Add write_slot(slot) to networking/DataTypes.py
 Add write_metadata(metadata) to networking/DataTypes.py
 Add write_nbtdata(data) to networking/DataTypes.py
 Add write_object_data(object) to networking/DataTypes.py
+Rewrite examples/tutorial.py
