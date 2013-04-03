@@ -72,8 +72,7 @@ client = SimpleClient()
 ```
 
 Then you can "inject" whatever code you want into events. Like so:
-```
-python
+```python
 def display_message(message):
     print fix_message(message)
 
@@ -81,8 +80,7 @@ client.eventmanager.recv_chat_message.add_handler(display_message)
 ```
 
 Now we're ready to connect:
-```
-python
+```python
 host = "localhost"
 port = 25565
 username = "dkkline"
