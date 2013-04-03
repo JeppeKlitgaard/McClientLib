@@ -9,7 +9,7 @@ Protocols
 
 Examples:
 =====
-* [DebugBot](https://github.com/dkkline/McClientLib/blob/master/examples/DebugBot/)
+* [DebugBot](https://github.com/dkkline/McClientLib/blob/master/examples/DebugBot.py)
 * [pyCraft](https://github.com/dkkline/pyCraft)
 * [Tutorial](https://github.com/dkkline/McClientLib/blob/master/examples/Tutorial.py)
 
