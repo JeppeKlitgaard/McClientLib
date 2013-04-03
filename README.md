@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 McLib
 =====
 
@@ -85,3 +86,9 @@ The structure of most simple clients is exactly the same (More complicated clien
 Tutorial client: https://github.com/dkkline/McLib/blob/master/examples/Tutorial/Tutorial.py
 
 If you have a simple client, and will let me use it as an example, please tell me!
+=======
+McClientLib
+===========
+
+A library written in python, for python. It is (hopefully) very useful for making simple, as well as advanced MineCraft clients.
+>>>>>>> 2a97d5e020d9b2c1b3a08467d8928e36d99019b6
