@@ -1,8 +1,7 @@
-<<<<<<< HEAD
-McLib
-=====
+McClientLib
+===========
 
-A MineCraft library written in, and for Python 2.7
+A library written in python, for python. It is (hopefully) very useful for making simple, as well as advanced MineCraft clients.
 
 Protocols
 =====
@@ -10,7 +9,9 @@ Protocols
 
 Examples:
 =====
-* DebugBot (https://github.com/dkkline/McLib/blob/master/examples/DebugBot/)
+* [DebugBot](https://github.com/dkkline/McClientLib/blob/master/examples/DebugBot/)
+* [pyCraft](https://github.com/dkkline/pyCraft)
+* [Tutorial](https://github.com/dkkline/McClientLib/blob/master/examples/Tutorial.py)
 
 Fun Facts:
 =====
@@ -23,72 +24,73 @@ Fun Facts:
 
 Known Issues:
 =====
-* Sometimes will "fail to verify username", seems random. Just try again I guess :(
-* Tutorial client (And other clients too I imagine) that use event03 will get weird looking messages when color codes are used
+* None, currently, this will change!
+
+FAQ (Not actually asked yet, but I figured I could make a FAQ without you asking questions, no?):
+=====
+# Q: How do I install it?
+# A: Like any other modern python module, via the setup.py or via pip. (If you still don't know how, see: [link](http://docs.python.org/2/install/), if you still don't know how, I recommend getting more familiar with python before using this module.)
+
+# Q: OMFG IT DONT WORK WTF BBQ GRILLED CHIKEN!?
+# A: Eh.
+
+# Q: I get kicked with "Outdated server!"
+# A: The version of this library is higher than the server you are connecting to. Either update the server, or look through the commit history for the right version (Messy)
+
+# Q: I get kicked with "Outdated client!"
+# A: The version of this library is lower than the server you are connecting to. Wait for the library to get updated, update it yourself (and push it to this git.), or backdate the server.
+
+# Q: How do I make a client?
+# A: See the tutorial further down this document, and the examples in the example folder.
+
+# Q: I get "Import Error: No module named McClient"
+# A: You forgot to actually install the module.
+
+
 
 Tutorial:
 =====
-A McLib client should contain atleast these 4 classes:
+A McClientLib client can usually be done just by importing SimpleClient:
 
-* Connection (https://github.com/dkkline/McLib/blob/master/networking/Connection.py)
-* PacketListener (https://github.com/dkkline/McLib/blob/master/networking/PacketListenerManager.py)
-* PacketSender (https://github.com/dkkline/McLib/blob/master/networking/PacketSenderManager.py)
-* EventManager (https://github.com/dkkline/McLib/blob/master/EventManager.py)
 
-You could argue that that's a lot, but connecting to a MineCraft server is not just plug and play!
-I'll go a bit more in depth.
-
-`connection.py` contains a few classes actually, I'll try to explain them.
-
-* `ServerConnection`, which is a class representing which is a class representing the connection between you and the MineCraft server.
-* `EncryptedFileObjectHandler` and `EncryptedSocketObjectHandler`, You shouldn't have to worry about those, `ServerConnection` takes care of that!
-* `SessionConnection`, which is a class representing the connection between you and `session.minecraft.net`,
-This takes care of logging in, Keep-Alives etc.
-* `KeepAliveConnection` which tells `session.minecraft.net` "Hey, yea, I'm still here!" every now and then, you shouldn't need to use this class, `SessionConnection` takes care of that.
-
+`SimpleClient` Does a lot of amazing things for a quick and dirty client.
+* Provides a default `EventManager` (You usually won't change this, use the eventmanager eventsystem instead)
+* Provides a default `Receiver` (You should only change this if you're trying to connect to a modded server, that modifies networking classes (IE not one that uses the modern 0xFA packet), or you're trying to do something shady.
+* Provides a default `Sender` (You should only change this if you're trying to connect to a modded server, that modifies networking classes (IE not one that uses the modern 0xFA packet), or you're trying to do something shady.
+* Intelligently figures out if you want an `OfflineSession` or a real `Session`
 Now to the actual programming, first I'd like to refer you to the Examples section, where you can find some example clients (Probably more useful then reading me ramble here in the Tutorial section!)
 
-First we need a `SessionConnection`, this requires a username and a password. (Note below is psudo python code, you will need to import stuff etc, see Examples for that.)
+Start by importing SimpleClient, like so:
 ```python
-session = Connection.SessionConnection(username, password)
-session.connect()
+from McClient import SimpleClient
+from McClient import fix_message  # To decode minecraft messages, colors etc.
 ```
-We just made a SessionConnection and told it to connect to `login.minecraft.net`.
-Behind the scenes it also started a `KeepAliveConnection`
 
-Next we want to set up a `sender` and a `listener`.
+Simply make a client like so:
 ```python
-sender = PacketSenderManager.Protocol_49()
-listener = PacketListenerManager.Protocol_49()
+client = SimpleClient()
 ```
-We just made a `sender` and a `listener`, notice we took Protocol_49, this is the minecraft 1.4.4 and 1.4.5 protocol handler. (There should be a class for every (not snapshots/weekly builds) release since 1.3.2 (39)
 
-Now that we're up and going on Protocol Handlers we need an `EventManager`, the purpose of eventmanagers is that you subclass the default one, and override the proper functions so you can react to events. You can see examples on this in the Example section. Let's say in this client we want to print every chat message we receive, I take a quick look at http://wiki.vg/Protocol, and find `Chat Message 0x03`, this tells me that I need to override `event03`, in the future I might make better function names, that have human readable names, but it is quite easy to look up on the wiki.
-Now to the code:
-```python
-class MyEventManager(EventManager):
-    def event03(self, direct, message):
-        print "CHAT: %s" % message
-
-eventmanager = MyEventManager()
+Then you can "inject" whatever code you want into events. Like so:
 ```
-We just made a custom eventmanager, and made a function that reacts to chat messages, and prints them!
+python
+def display_message(message):
+    print fix_message(message)
 
-Now to the final bit, this is getting quite lengthy!
-
-```python
-conn = Connection.ServerConnection(session, server_ip, server_port, sender, listener, event_manager=event_manager)
-conn.connect()
+client.eventmanager.recv_chat_message.add_handler(display_message)
 ```
-Tadaa!! That is it!
-The structure of most simple clients is exactly the same (More complicated clients could be putting a GUI on top, hell maybe even a full-blown minecraft client!), you just gotta override the appropriate functions in the eventmanager!
 
-Tutorial client: https://github.com/dkkline/McLib/blob/master/examples/Tutorial/Tutorial.py
+Now we're ready to connect:
+```
+python
+host = "localhost"
+port = 25565
+username = "dkkline"
+password = "ThisIsn'tReallyMyPassword"
+client.connect(host, port, username, password)
+```
+Tadaa! Now you should see it print whatever chat messages your client receives!
 
-If you have a simple client, and will let me use it as an example, please tell me!
-=======
-McClientLib
-===========
+A better tutorial client, with less handholding:
+Tutorial client: https://github.com/dkkline/McClientLib/blob/master/examples/Tutorial.py
 
-A library written in python, for python. It is (hopefully) very useful for making simple, as well as advanced MineCraft clients.
->>>>>>> 2a97d5e020d9b2c1b3a08467d8928e36d99019b6
