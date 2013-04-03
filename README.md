@@ -28,23 +28,23 @@ Known Issues:
 
 FAQ (Not actually asked yet, but I figured I could make a FAQ without you asking questions, no?):
 =====
-### Q: How do I install it?
-### A: Like any other modern python module, via the setup.py or via pip. (If you still don't know how, see: [link](http://docs.python.org/2/install/), if you still don't know how, I recommend getting more familiar with python before using this module.)
+##### Q: How do I install it?
+##### A: Like any other modern python module, via the setup.py or via pip. (If you still don't know how, see: [link](http://docs.python.org/2/install/), if you still don't know how, I recommend getting more familiar with python before using this module.)
 
-### Q: OMFG IT DONT WORK WTF BBQ GRILLED CHIKEN!?
-### A: Eh.
+##### Q: OMFG IT DONT WORK WTF BBQ GRILLED CHIKEN!?
+##### A: Eh.
 
-### Q: I get kicked with "Outdated server!"
-### A: The version of this library is higher than the server you are connecting to. Either update the server, or look through the commit history for the right version (Messy)
+##### Q: I get kicked with "Outdated server!"
+##### A: The version of this library is higher than the server you are connecting to. Either update the server, or look through the commit history for the right version (Messy)
 
-### Q: I get kicked with "Outdated client!"
-### A: The version of this library is lower than the server you are connecting to. Wait for the library to get updated, update it yourself (and push it to this git.), or backdate the server.
+##### Q: I get kicked with "Outdated client!"
+##### A: The version of this library is lower than the server you are connecting to. Wait for the library to get updated, update it yourself (and push it to this git.), or backdate the server.
 
-### Q: How do I make a client?
-### A: See the tutorial further down this document, and the examples in the example folder.
+##### Q: How do I make a client?
+##### A: See the tutorial further down this document, and the examples in the example folder.
 
-### Q: I get "Import Error: No module named McClient"
-### A: You forgot to actually install the module.
+##### Q: I get "Import Error: No module named McClient"
+##### A: You forgot to actually install the module.
 
 
 
