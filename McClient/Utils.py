@@ -1,4 +1,7 @@
 import re
+from networking.Utils import get_server_info  # I like to store get_server_info
+# in networking, since it is networking related, but I import it here, so
+# it gets assigned to McClient.Utils namespace as well.
 
 
 def __translate_escape(m):
