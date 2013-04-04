@@ -31,7 +31,19 @@ def stringToByteArray(string):
     return array.array('B', string.decode("hex"))
 
 
+# This function is also courtesy of barneygale
+# https://gist.github.com/barneygale/1209061
 def get_server_info(host, port):
+    """Returns the information the client receives when listing servers
+    on the "server-selection" screen.
+
+    The dict is contains:
+        * protocol_version,
+        * server_version,
+        * motd,
+        * players,
+        * max_players
+    """
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((host, port))
     
