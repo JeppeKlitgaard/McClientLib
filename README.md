@@ -46,12 +46,19 @@ FAQ (Not actually asked yet, but I figured I could make a FAQ without you asking
 ##### Q: I get "Import Error: No module named McClient"
 ##### A: You forgot to actually install the module.
 
-
+##### Q: How do I get the "server-list-ping" info (The stuff on the server-selection screen, e.g. MOTD, server-version, players, etc)?
+##### A: `McClient.Utils.get_server_info(host, port)` returns a dict containing the information you want. Also see Tutorial section.
 
 Tutorial:
 =====
 A McClientLib client can usually be done just by importing SimpleClient:
 
+`Utils.get_server_info(host, port)` returns a dictionary containing all the info the client usually gets from the servers on the "server-selection" screen. The dict returned is:
+* `protocol_version` is the version of the protocol the server uses. (e.g. '60')
+* `server_version` is the version of the game the server uses. (e.g. '1.5')
+* `motd` is the Message-Of-The-Day on the server, this should be decoded using `Utils.fix_message(message)`. (e.g. "A MineCraft Server.")
+* `players` is the amount of players on the server. (e.g. "11")
+* `max_players` is the maximum amount of players the server accepts. (e.g. "20")
 
 `SimpleClient` Does a lot of amazing things for a quick and dirty client.
 * Provides a default `EventManager` (You usually won't change this, use the eventmanager eventsystem instead)
