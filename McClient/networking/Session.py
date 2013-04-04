@@ -8,6 +8,7 @@ class BaseSession(object):
     username = None
     sessionID = None
     UID = None
+    online = False
 
     def connect(self, username, password):
         raise NotImplementedError()
@@ -46,6 +47,8 @@ class Session(BaseSession):
 
         response = response.split(":")
 
+        self.online = True
+
         self.game_version = response[0]
         # field #1 is deprecated, always!
         self.username = response[2]
@@ -75,5 +78,3 @@ class OfflineSession(BaseSession):
     def joinserver(self, serverID):
         """Since this is offline mode, we don't need the serverID."""
         pass
-
-
