@@ -1,0 +1,2 @@
+0.5:
+* Added McClient.Utils.get_server_info(host, port), this is used for getting players, max_players, protocol_version, server_ersion, and MOTD
