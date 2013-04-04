@@ -1,6 +1,7 @@
 import array
 import string
 from hashlib import sha1
+import socket
 
 
 def generate_serverID(serverID, secret, pubkey):
@@ -28,6 +29,41 @@ def hex2str(hex_num):
 
 def stringToByteArray(string):
     return array.array('B', string.decode("hex"))
+
+
+def get_server_info(host, port):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((host, port))
+    
+    #Send 0xFE: Server list ping
+    s.send('\xfe\x01')
+    
+    data = s.recv(1024)
+    s.close()
+    
+    #Check we've got a 0xFF Disconnect
+    assert data[0] == '\xff'
+    
+    #Remove the packet ident (0xFF) and the short containing the length of the string
+    data = data[3:]  # packet ident is 1 byte long, short is 2 bytes, total 3 bytes
+    #Decode UCS-2 string
+    data = data.decode('utf-16be')
+    
+    #Check the first 3 characters of the string are what we expect
+    assert data[:3] == u'\xa7\x31\x00'
+
+    # Skip 3 bytes. Don't know why
+    data = data[3:]
+    
+    #Split
+    data = data.split('\x00')
+    
+    #Return a dict of values
+    return {'protocol_version': int(data[0]),
+            'server_version':       data[1],
+            'motd':                 data[2],
+            'players':          int(data[3]),
+            'max_players':      int(data[4])}
 
 
 def TwosCompliment(digest):
