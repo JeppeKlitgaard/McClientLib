@@ -5,7 +5,7 @@ A library written in python, for python. It is (hopefully) very useful for makin
 
 Protocols
 =====
-* 60 (1.5.0, 1.5.1)
+* 60 (1.5, 1.5.1)
 
 Examples:
 =====
