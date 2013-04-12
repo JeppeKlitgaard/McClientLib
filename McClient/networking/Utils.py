@@ -33,6 +33,7 @@ def stringToByteArray(string):
 
 # This function is also courtesy of barneygale
 # https://gist.github.com/barneygale/1209061
+# Updated version is by ammaraskar
 def get_server_info(host, port):
     """Returns the information the client receives when listing servers
     on the "server-selection" screen.
@@ -45,37 +46,41 @@ def get_server_info(host, port):
         * max_players
     """
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.settimeout(2.0)
     s.connect((host, port))
-    
-    #Send 0xFE: Server list ping
-    s.send('\xfe\x01')
-    
-    data = s.recv(1024)
+
+    # Send 0xFE: Server list ping
+    s.send("\xfe")
+    # Send a payload of 0x01 to trigger a new response,
+    # if the server supports it.
+    s.send("\x01")
+
+    # Read as much data as we can (max size: 241 bytes)
+    data = s.recv(256)
     s.close()
-    
+
     #Check we've got a 0xFF Disconnect
     assert data[0] == '\xff'
-    
-    #Remove the packet ident (0xFF) and the short containing the length of the string
-    data = data[3:]  # packet ident is 1 byte long, short is 2 bytes, total 3 bytes
+
+    #Remove: packet ident (0xFF), short containing the length of the string
+    data = data[3:]  # packet ident: 1 byte, short: 2 bytes, total: 3 bytes
     #Decode UCS-2 string
     data = data.decode('utf-16be')
-    
-    #Check the first 3 characters of the string are what we expect
-    assert data[:3] == u'\xa7\x31\x00'
 
-    # Skip 3 bytes. Don't know why
-    data = data[3:]
-    
-    #Split
-    data = data.split('\x00')
-    
-    #Return a dict of values
-    return {'protocol_version': int(data[0]),
-            'server_version':       data[1],
-            'motd':                 data[2],
-            'players':          int(data[3]),
-            'max_players':      int(data[4])}
+    if data.startswith(u"\xa7" + "1"):  # New style.
+        data = data.split(u"\x00")
+        # return
+        return {"protcol_version":   int(data[1]),
+                "minecraft_version":      data[2],
+                "motd":                   data[3],
+                "players":           int(data[4]),
+                "max_players":       int(data[5])}
+    else:  # Old style.
+        data = data.split(u"\xa7")
+        # return
+        return {"motd":        data[0],
+                "players":     int(data[1]),
+                "max_players": int(data[2])}
 
 
 def TwosCompliment(digest):

@@ -1,3 +1,4 @@
 0.5:
 * Added McClient.Utils.get_server_info(host, port), this is used for getting players, max_players, protocol_version, server_ersion, and MOTD
 * Added online boolean attribute to Session.
+* Updated McClient.Utils.get_server_info(host, port), it now supports old servers as well. (Thanks to ammaraskar)
