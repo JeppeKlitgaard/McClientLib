@@ -103,3 +103,10 @@ Tadaa! Now you should see it print whatever chat messages your client receives!
 A better tutorial client, with less handholding:
 Tutorial client: https://github.com/dkkline/McClientLib/blob/master/examples/Tutorial.py
 
+Contact:
+========
+Dkkline (Me!):
+
+Mail:       [jeppe@dapj.dk](mailto:jeppe@dapj.dk) - (I don't read mails frequently, but if you write to me here, you will get a response __eventually__ (TM).
+
+Twitter:    [jeppeklitgaard](https://twitter.com/jeppeklitgaard) - (I don't read tweets frequently, but I can feel my inner tweetster growing, so I may use this more in the future. Or maybe not. Maybe.).
