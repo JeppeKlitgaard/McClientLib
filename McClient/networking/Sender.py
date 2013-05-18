@@ -14,7 +14,7 @@ class BaseSender(object):
 
 
 class Sender(BaseSender):
-    protocol_version = 60
+    protocol_version = 61
 
     def send_keepalive(self, KID):
         self.write_id("\x00")

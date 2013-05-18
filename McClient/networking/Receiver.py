@@ -25,7 +25,7 @@ class BaseReceiver(object):
 
 
 class Receiver(BaseReceiver):
-    protocol_version = 60
+    protocol_version = 61
 
     def handle00(self):
         KID = self.connection.read_int()

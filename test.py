@@ -11,10 +11,6 @@ def t(*args, **kwargs):
     if not pid in black_list:
         print pid, kwargs
 
-
-def t2(*args, **kwargs):
-    print "TEST!!!\n"
-
 HOST = "localhost"
 PORT = 25565
 try:
@@ -26,7 +22,6 @@ except IOError:
 
 connection = SimpleClient()
 connection.eventmanager.got_event.add_handler(t)
-connection.eventmanager.recv_keepalive.add_handler(t2)
 connection.connect(HOST, PORT, USERNAME, PASSWORD)
 
 try:
