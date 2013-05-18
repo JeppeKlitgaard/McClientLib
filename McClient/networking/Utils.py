@@ -75,6 +75,7 @@ def get_server_info(host, port):
                 "motd":                   data[3],
                 "players":           int(data[4]),
                 "max_players":       int(data[5])}
+
     else:  # Old style.
         data = data.split(u"\xa7")
         # return
