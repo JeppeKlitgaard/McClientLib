@@ -5,7 +5,8 @@ A library written in python, for python. It is (hopefully) very useful for makin
 
 Protocols
 =====
-* 60 (1.5, 1.5.1)
+* 61 (1.5.2) ___This is the latest supported version.___
+* 60 (1.5.0, 1.5.1) [Tag for v60](https://github.com/dkkline/McClientLib/tree/0.4.1)
 
 Examples:
 =====
@@ -35,7 +36,10 @@ FAQ (Not actually asked yet, but I figured I could make a FAQ without you asking
 ##### A: Eh.
 
 ##### Q: I get kicked with "Outdated server!"
-##### A: The version of this library is higher than the server you are connecting to. Either update the server, or look through the commit history for the right version (Messy)
+##### A: The version of this library is higher than the server you are connecting to. You have a few options.
+###### 1.) Update the server.
+###### 2.) Use the tag for that Protcol/MineCraft version. (See Protocols section) (Recommended if you cannot update server)
+###### 3.) Look through the commit history for the right version (Messy)
 
 ##### Q: I get kicked with "Outdated client!"
 ##### A: The version of this library is lower than the server you are connecting to. Wait for the library to get updated, update it yourself (and push it to this git.), or backdate the server.
@@ -99,3 +103,10 @@ Tadaa! Now you should see it print whatever chat messages your client receives!
 A better tutorial client, with less handholding:
 Tutorial client: https://github.com/dkkline/McClientLib/blob/master/examples/Tutorial.py
 
+Contact:
+========
+Dkkline (Me!):
+
+Mail:       [jeppe@dapj.dk](mailto:jeppe@dapj.dk) - (I don't read mails frequently, but if you write to me here, you will get a response __eventually__ (TM).
+
+Twitter:    [jeppeklitgaard](https://twitter.com/jeppeklitgaard) - (I don't read tweets frequently, but I can feel my inner tweetster growing, so I may use this more in the future. Or maybe not. Maybe.).
