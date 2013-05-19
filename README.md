@@ -3,6 +3,14 @@ McClientLib
 
 A library written in python, for python. It is (hopefully) very useful for making simple, as well as advanced MineCraft clients.
 
+Installation
+=====
+##### Install from ___pypi___:
+McClient is on the PYthon Package Index, as ___McClient___, install it using `pip install McClient` as a user with sufficient rights.
+
+##### Install from ___github(source)___:
+Download this git repository and install it using `python setup.py install` as a user with sufficient rights.
+
 Protocols
 =====
 * 61 (1.5.2) ___This is the latest supported version.___
