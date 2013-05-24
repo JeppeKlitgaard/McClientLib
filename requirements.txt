@@ -1,2 +1,3 @@
 EventManager == 0.7
 pycrypto == 2.5
+pynbt
