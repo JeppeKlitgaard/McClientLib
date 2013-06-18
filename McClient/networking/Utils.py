@@ -70,7 +70,7 @@ def get_server_info(host, port):
     if data.startswith(u"\xa7" + "1"):  # New style.
         data = data.split(u"\x00")
         # return
-        return {"protcol_version":   int(data[1]),
+        return {"protocol_version":   int(data[1]),
                 "minecraft_version":      data[2],
                 "motd":                   data[3],
                 "players":           int(data[4]),
