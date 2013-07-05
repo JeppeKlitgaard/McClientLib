@@ -5,16 +5,16 @@ from Utils import hex2str
 
 
 data_types = {
-    "ubyte":  'B',
-    "byte":   'b',
-    "bool":   '?',
-    "short":  'h',
+    "ubyte": 'B',
+    "byte": 'b',
+    "bool": '?',
+    "short": 'h',
     "ushort": 'H',
-    "float":  'f',
-    "int":    'i',
-    "uint":   'I',
+    "float": 'f',
+    "int": 'i',
+    "uint": 'I',
     "double": 'd',
-    "long":   'q',
+    "long": 'q',
 }
 
 
@@ -41,6 +41,7 @@ class TypeReader(object):
 
     def read_ushort(self):
         data = self._unpack("ushort", self.read(2))
+        return data
 
     def read_string(self):
         length = self.read_short() * 2
