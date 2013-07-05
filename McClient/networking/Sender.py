@@ -103,6 +103,13 @@ class Sender(BaseSender):
         self.connection.write_int(EID)
         self.connection.write_byte(actionID)
 
+    def steer_vehicle(self, sideways, forward, jump, unmount):
+        self.write_id("\x1B")
+        self.connection.write_float(sideways)
+        self.connection.write_float(forward)
+        self.connection.write_boolean(jump)
+        self.connection.write_boolean(unmount)
+
     def send_close_window(self, windowID):
         self.write_id("\x65")
         self.connection.write_byte(windowID)

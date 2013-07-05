@@ -74,6 +74,8 @@ class BaseEventManager(EventManager):
 
         self.set_event("recv1A", "recv_spawn_exp_orb")
 
+        self.set_event("sent1B", "sent_steer_vehicle")
+
         self.set_event("recv1C", "recv_entity_velocity")
 
         self.set_event("recv1D", "recv_destroy_entity")
