@@ -757,7 +757,7 @@ class Receiver(BaseReceiver):
 
     def handleC8(self):
         statID = self.connection.read_int()
-        amount = self.connection.read_byte()
+        amount = self.connection.read_int()
         toReturn = {"statID": statID,
                     "amount": amount}
 
