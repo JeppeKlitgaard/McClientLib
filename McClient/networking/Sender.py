@@ -146,8 +146,8 @@ class Sender(BaseSender):
     def send_player_abilities(self, flags, flying_speed, walking_speed):
         self.write_id("\xCA")
         self.connection.write_byte(flags)
-        self.connection.write_byte(flying_speed)
-        self.connection.write_byte(walking_speed)
+        self.connection.write_float(flying_speed)
+        self.connection.write_float(walking_speed)
 
     def send_tab_complete(self, text):
         self.write_id("\xCB")

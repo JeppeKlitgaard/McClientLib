@@ -758,8 +758,8 @@ class Receiver(BaseReceiver):
 
     def handleCA(self):
         flags = self.connection.read_byte()  # TODO Decode flags?
-        fly_speed = self.connection.read_byte()
-        walk_speed = self.connection.read_byte()
+        fly_speed = self.connection.read_float()
+        walk_speed = self.connection.read_float()
 
         toReturn = {"flags": flags,
                     "fly_speed": fly_speed,
