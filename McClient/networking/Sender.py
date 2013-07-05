@@ -98,10 +98,14 @@ class Sender(BaseSender):
         self.connection.write_int(EID)
         self.connection.write_byte(animation)
 
-    def send_entity_action(self, EID, actionID):
+    def send_entity_action(self, EID, actionID, unknown):
+        # TODO Fix unknown.
+        # According to wiki.vg, unknown is currently unknown.
+        # It does however have something to do with horses, and ranges from 0-90
         self.write_id("\x13")
         self.connection.write_int(EID)
         self.connection.write_byte(actionID)
+        self.connection.write_int(unknown)
 
     def steer_vehicle(self, sideways, forward, jump, unmount):
         self.write_id("\x1B")
