@@ -368,8 +368,11 @@ class Receiver(BaseReceiver):
     def handle27(self):
         EID = self.connection.read_int()
         vehicleID = self.connection.read_int()
+        leashed = self.connection.read_boolean()
+
         toReturn = {"EID": EID,
-                    "vehicleID": vehicleID}
+                    "vehicleID": vehicleID,
+                    "leashed": leashed}
 
         return toReturn
 
