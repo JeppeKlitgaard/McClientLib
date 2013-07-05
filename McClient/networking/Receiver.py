@@ -640,16 +640,21 @@ class Receiver(BaseReceiver):
         return toReturn
 
     def handle64(self):
+        # TODO Fix unknown
         windowID = self.connection.read_byte()
         inventory_type = self.connection.read_byte()
         window_title = self.connection.read_string()
         slots = self.connection.read_byte()
         use_window_title = self.connection.read_boolean()
+        if inventory_type == 11:  # Unknown, only sent when inv_type == 11
+            unknown = self.connection.read_int()
+
         toReturn = {"windowID": windowID,
                     "inventory_type": inventory_type,
                     "window_title": window_title,
                     "slots": slots,
-                    "use_window_title": use_window_title}
+                    "use_window_title": use_window_title,
+                    "unknown": unknown}
 
         return toReturn
 
