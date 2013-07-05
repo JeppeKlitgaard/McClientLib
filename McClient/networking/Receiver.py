@@ -87,7 +87,7 @@ class Receiver(BaseReceiver):
         return toReturn
 
     def handle08(self):
-        health = self.connection.read_short()
+        health = self.connection.read_float()
         food = self.connection.read_short()
         saturation = self.connection.read_float()
         toReturn = {"health": health,
