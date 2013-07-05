@@ -411,6 +411,20 @@ class Receiver(BaseReceiver):
 
         return toReturn
 
+    def handle2C(self):
+        EID = self.connection.read_int()
+        prop_count = self.connection.read_int()
+        properties = {}
+        for i in xrange(prop_count):
+            key = self.connection.read_string()
+            value = self.connection.read_double()
+            properties[key] = value
+
+        toReturn = {"EID": EID,
+                    "properties": properties}
+
+        return toReturn
+
     def handle33(self):
         x = self.connection.read_int()
         z = self.connection.read_int()

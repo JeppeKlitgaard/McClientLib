@@ -102,6 +102,8 @@ class BaseEventManager(EventManager):
 
         self.set_event("recv2B", "recv_set_exp")
 
+        self.set_event("recv2C", "recv_entity_properties")
+
         self.set_event("recv33", "recv_chunk_data")
 
         self.set_event("recv34", "recv_multi_block_change")
