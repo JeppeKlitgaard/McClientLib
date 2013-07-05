@@ -4,3 +4,5 @@ Add write_nbtdata(data) to networking/DataTypes.py
 Add write_object_data(object) to networking/DataTypes.py
 Fix unconventional naming (http://www.python.org/dev/peps/pep-0008/#naming-conventions)
 Fix CTRL+C does not disconnect properly (test.py)
+Fix unconvetional naming (toReturn) in Sender.py and Receiver.py
+Add comment telling the package ID and package name for each package function in Sender.py and Receiver.py
