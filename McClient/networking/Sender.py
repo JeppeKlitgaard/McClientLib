@@ -1,4 +1,5 @@
-from Utils import hex2str
+from McClient.networking.Utils import hex2str
+from McClient.networking import PROTOCOL_VERSION
 
 
 class BaseSender(object):
@@ -14,7 +15,7 @@ class BaseSender(object):
 
 
 class Sender(BaseSender):
-    protocol_version = 61
+    protocol_version = PROTOCOL_VERSION
 
     def send_keepalive(self, KID):
         self.write_id("\x00")

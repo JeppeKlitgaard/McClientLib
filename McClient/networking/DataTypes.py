@@ -1,7 +1,7 @@
 import struct
 from io import BytesIO
 from pynbt import NBTFile
-from Utils import hex2str
+from McClient.networking.Utils import hex2str
 
 
 data_types = {

@@ -1,3 +1,5 @@
+PROTOCOL_VERSION = 61
+
 from Connection import Connection
 from Session import Session, OfflineSession
 from Receiver import Receiver

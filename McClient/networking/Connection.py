@@ -1,7 +1,7 @@
-from DataTypes import TypeReader, TypeWriter
-from Encryption import Socket
+from McClient.networking.DataTypes import TypeReader, TypeWriter
+from McClient.networking.Encryption import Socket
+from McClient.networking.NetworkHelper import NetworkHelper
 from threading import Thread
-from NetworkHelper import NetworkHelper
 
 
 class Connection(TypeReader, TypeWriter, Thread, NetworkHelper):

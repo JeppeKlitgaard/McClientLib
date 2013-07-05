@@ -1,4 +1,5 @@
-from Exceptions import HandlerError, ConnectionClosed
+from McClient.networking.Exceptions import HandlerError, ConnectionClosed
+from McClient.networking import PROTOCOL_VERSION
 
 
 class BaseReceiver(object):
@@ -25,7 +26,7 @@ class BaseReceiver(object):
 
 
 class Receiver(BaseReceiver):
-    protocol_version = 61
+    protocol_version = PROTOCOL_VERSION
 
     def handle00(self):
         KID = self.connection.read_int()

@@ -1,6 +1,6 @@
-from networking import Session, OfflineSession
-from networking import Receiver, Sender, Connection
-from Events import EventManager
+from McClient.networking import Session, OfflineSession
+from McClient.networking import Receiver, Sender, Connection
+from McClient.Events import EventManager
 
 
 class SimpleClient(Connection):

@@ -1,4 +1,6 @@
-from Exceptions import SessionError, SessionBadLogin, SessionVersionError
+from McClient.networking.Exceptions import (SessionError,
+                                            SessionBadLogin,
+                                            SessionVersionError)
 import urllib
 import urllib2
 

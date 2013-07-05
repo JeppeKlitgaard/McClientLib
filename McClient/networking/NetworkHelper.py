@@ -1,6 +1,6 @@
-from Encryption import generate_secret, get_cipher
-from Exceptions import NetworkError
-from Utils import generate_serverID
+from McClient.networking.Encryption import generate_secret, get_cipher
+from McClient.networking.Exceptions import NetworkError
+from McClient.networking.Utils import generate_serverID
 
 
 class NetworkHelper(object):
