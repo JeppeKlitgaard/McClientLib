@@ -11,8 +11,9 @@ def t(*args, **kwargs):
     if not pid in black_list:
         print pid, kwargs
 
-HOST = "localhost"
-PORT = 25565
+HOST = raw_input("HOST: ") or "localhost"
+PORT = int(raw_input("PORT: ") or 25565)
+
 try:
     with open(".credentials") as f:
         USERNAME, PASSWORD = f.read().split("\n")[:2]
