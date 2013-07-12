@@ -10,8 +10,8 @@ else:
 
 info = ping(host, port)
 
-print "Players: {players}".format(players=info["players"])
-print "Maximum players: {players}".format(players=info["max_players"])
-print "Message of the Day: {motd}".format(motd=info["motd"])
-print "Protocol version: {version}".format(version=info["protocol_version"])
-print "MineCraft version: {version}".format(version=info["minecraft_version"])
+print u"Players: {players}".format(players=info["players"])
+print u"Maximum players: {players}".format(players=info["max_players"])
+print u"Message of the Day: {motd}".format(motd=info["motd"])
+print u"Protocol version: {version}".format(version=info["protocol_version"])
+print u"MineCraft version: {version}".format(version=info["minecraft_version"])
