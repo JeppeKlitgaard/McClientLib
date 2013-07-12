@@ -13,6 +13,7 @@ Download this git repository and install it using `python setup.py install` as a
 
 Protocols
 =====
+* There might be experimental support for other protocols in other branches, they follow this naming convention: `prtcl_<VERSION>`, e.g. `prtcl_74`.
 * 73 (1.6.1) ___This is the latest supported version.___
 * 72 (1.6) [Tag for v72](https://github.com/dkkline/McClientLib/tree/0.4.3)
 * 61 (1.5.2) [Tag for v61](https://github.com/dkkline/McClientLib/tree/0.4.2)
