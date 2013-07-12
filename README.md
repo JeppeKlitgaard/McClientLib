@@ -13,7 +13,8 @@ Download this git repository and install it using `python setup.py install` as a
 
 Protocols
 =====
-* 61 (1.5.2) ___This is the latest supported version.___
+* 72 (1.6) ___This is the latest supported version.___
+* 61 (1.5.2) [Tag for v61](https://github.com/dkkline/McClientLib/tree/0.4.2)
 * 60 (1.5.0, 1.5.1) [Tag for v60](https://github.com/dkkline/McClientLib/tree/0.4.1)
 
 Examples:
