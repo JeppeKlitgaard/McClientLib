@@ -2,6 +2,8 @@ import array
 import string
 from hashlib import sha1
 import socket
+from struct import pack
+from McClient.networking import PROTOCOL_VERSION
 
 
 def generate_serverID(serverID, secret, pubkey):
@@ -33,10 +35,17 @@ def stringToByteArray(string):
 
 # This function is also courtesy of barneygale
 # https://gist.github.com/barneygale/1209061
-# Updated version is by ammaraskar
-def get_server_info(host, port):
+
+def pack_string(string):
+    """Packs a string."""
+    return pack('>h', len(string)) + string.encode('utf-16be')
+
+
+def get_server_info(host, port, timeout=3.0):
     """Returns the information the client receives when listing servers
     on the "server-selection" screen.
+
+    WARNING: Strings are Unicode!
 
     The dict is contains:
         * protocol_version,
@@ -46,17 +55,23 @@ def get_server_info(host, port):
         * max_players
     """
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.settimeout(2.0)
+    s.settimeout(timeout)
     s.connect((host, port))
 
-    # Send 0xFE: Server list ping
+    # Send 0xFE: Server list ping with 'magic' payload: "\x01"
     s.send("\xfe")
-    # Send a payload of 0x01 to trigger a new response,
-    # if the server supports it.
     s.send("\x01")
 
-    # Read as much data as we can (max size: 241 bytes)
-    data = s.recv(256)
+    # Send 0xFA plugin message
+    s.send("\xfa")  # Packet identifier
+    s.send(pack_string("MC|PingHost"))  # Message identifier
+    s.send(pack(">h", 7 + 2 * len(host)))  # Payload length
+    s.send(pack("b", PROTOCOL_VERSION))  # protocol version
+    s.send(pack_string(host))  # host
+    s.send(pack(">i", port))
+
+    # Read as much data as we can, then close the socket.
+    data = s.recv(1024)
     s.close()
 
     #Check we've got a 0xFF Disconnect
@@ -67,21 +82,19 @@ def get_server_info(host, port):
     #Decode UCS-2 string
     data = data.decode('utf-16be')
 
-    if data.startswith(u"\xa7" + "1"):  # New style.
-        data = data.split(u"\x00")
-        # return
-        return {"protocol_version":   int(data[1]),
-                "minecraft_version":      data[2],
-                "motd":                   data[3],
-                "players":           int(data[4]),
-                "max_players":       int(data[5])}
+    # Check that the first 3 characters were what we expected.
+    # Then throw them away.
+    assert data[:3] == u"\xa7\x31\x00"
+    data = data[3:]
 
-    else:  # Old style.
-        data = data.split(u"\xa7")
-        # return
-        return {"motd":        data[0],
-                "players":     int(data[1]),
-                "max_players": int(data[2])}
+    # Split
+    data = data.split("\x00")
+
+    return {"protocol_version": int(data[0]),
+            "minecraft_version": data[1],
+            "motd": data[2],
+            "players": int(data[3]),
+            "max_players": int(data[4])}
 
 
 def TwosCompliment(digest):
