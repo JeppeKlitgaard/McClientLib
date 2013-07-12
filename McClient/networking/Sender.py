@@ -101,7 +101,7 @@ class Sender(BaseSender):
     def send_entity_action(self, EID, actionID, unknown):
         # TODO Fix unknown.
         # According to wiki.vg, unknown is currently unknown.
-        # It does however have something to do with horses, and ranges from 0-90
+        # It has something to do with horses, and ranges from 0-90
         self.write_id("\x13")
         self.connection.write_int(EID)
         self.connection.write_byte(actionID)
