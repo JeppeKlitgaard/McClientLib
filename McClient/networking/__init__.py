@@ -1,4 +1,4 @@
-PROTOCOL_VERSION = 73
+PROTOCOL_VERSION = 74
 
 from Connection import Connection
 from Session import Session, OfflineSession
