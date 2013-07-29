@@ -49,7 +49,7 @@ for prefix in ("recv", "send"):
     print("===" + prefix.upper() + "===")
     # ^ = difference
     for difference in burger_packets[prefix] ^ mcclient_packets[prefix]:
-        fmt = "{pid} (In burger: {ib}, In McClient: {imc})"
+        fmt = "{pid} (In Burger: {ib}, In McClient: {imc})"
         in_burger = difference in burger_packets[prefix]
         in_mcclient = difference in mcclient_packets[prefix]
         print(fmt.format(pid=difference, ib=in_burger, imc=in_mcclient))
