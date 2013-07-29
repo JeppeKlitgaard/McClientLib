@@ -1,7 +1,7 @@
 McClientLib
 ===========
 
-A library written in python, for python. It is (hopefully) very useful for making simple, as well as advanced MineCraft clients.
+A library written in Python, for Python. It is (hopefully) very useful for making simple, as well as advanced MineCraft clients.
 
 Installation
 =====
@@ -111,8 +111,7 @@ client.connect(host, port, username, password)
 ```
 Tadaa! Now you should see it print whatever chat messages your client receives!
 
-A better tutorial client, with less handholding:
-Tutorial client: https://github.com/dkkline/McClientLib/blob/master/examples/Tutorial.py
+A better tutorial client, with less handholding: [Tutorial Client](https://github.com/dkkline/McClientLib/blob/master/examples/Tutorial.py)
 
 Contact:
 ========
